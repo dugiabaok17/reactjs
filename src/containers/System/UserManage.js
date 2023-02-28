@@ -39,7 +39,7 @@ class UserManage extends Component {
               </tr>
             </thead>
             <tbody>
-              {arrUsers.map((item,index) => {
+              {arrUsers && arrUsers.map((item,index) => {
                 return (
                   <tr key={index} className="lh-lg">
                     <td className="column-data-user">{item.email}</td>
