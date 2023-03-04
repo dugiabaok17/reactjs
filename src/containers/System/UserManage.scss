@@ -39,3 +39,30 @@
     box-shadow: 0 0 10px #d1e9d6;
   }
 }
+
+.custom-location-icons {
+  position: relative;
+
+  .custom-location {
+    position: absolute;
+    right: 17px;
+    top: 39px;
+    cursor: pointer;
+  }
+}
+
+.close {
+  border: none;
+  background-color: #de7575;
+  color: white;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: red;
+  }
+}
+
+.btn-create, .btn-cancel {
+  line-height: 20px;
+  padding: 5px;
+}
