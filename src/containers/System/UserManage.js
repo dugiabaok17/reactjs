@@ -1,34 +1,95 @@
 import React, { Component } from "react";
-import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import "./UserManage.scss";
-import { getAllUsers } from "../../services/userService";
-import { map } from "lodash";
+import { getAllUsers, createNewUser ,delUser} from "../../services/userService";
+import ModalUser from "./ModalUser";
 class UserManage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       arrUsers: [],
+      isOpenModalUser: false,
     };
   }
 
   async componentDidMount() {
+    await this.getAllUsersFromReact();
+  }
+
+  getAllUsersFromReact = async () => {
     let response = await getAllUsers("ALL");
     if (response && response.errCode === 0) {
       this.setState({
         arrUsers: response.users,
       });
     }
+  };
+
+  handleAddNewUser = () => {
+    this.setState({
+      isOpenModalUser: !this.state.isOpenModalUser,
+    });
+  };
+
+  toggle = () => {
+    this.setState({
+      isOpenModalUser: !this.state.isOpenModalUser,
+    });
+  };
+
+  createNewUser =  async (data) => {
+    try {
+     let response = await createNewUser(data);
+     if(response && response.errCode !== 0) {
+      alert(response.message)
+     } else {
+      await this.getAllUsersFromReact()
+      this.setState({
+        isOpenModalUser: false
+      })
+     }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  handleDelUser = async(user) => {
+    try {
+      let res = await delUser(user.id)
+      if(res && res.errCode === 0) {
+        this.getAllUsersFromReact()
+      } else {
+        alert(res.message)
+      }
+      this.getAllUsersFromReact()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   render() {
     let arrUsers = this.state.arrUsers;
     return (
-      <div className="users-container text-center">
+      <div className="users-container">
+        <ModalUser
+          isOpen={this.state.isOpenModalUser}
+          test="abc"
+          toggleParent={this.toggle}
+          createNewUser={this.createNewUser}
+        />
         {console.log("this log", arrUsers)}
-        <h1 className="mt-3">Manage users with Aluminum</h1>
+        <h1 className="mt-3 text-center">Manage users with Aluminum</h1>
+
         <div className="container">
-          <table className="table">
+          <div className="">
+            <button
+              className="btn btn-primary px-2"
+              onClick={() => this.handleAddNewUser()}
+            >
+              <i className="fas fa-plus pe-1"></i> Add new user
+            </button>
+          </div>
+          <table className="table text-center">
             <thead>
               <tr>
                 <th scope="col">Email</th>
@@ -39,25 +100,26 @@ class UserManage extends Component {
               </tr>
             </thead>
             <tbody>
-              {arrUsers && arrUsers.map((item,index) => {
-                return (
-                  <tr key={index} className="lh-lg">
-                    <td className="column-data-user">{item.email}</td>
-                    <td className="column-data-user">{`${item.lastName} ${item.firstName}`}</td>
-                    <td className="column-data-user">{item.address}</td>
-                    <td className="column-data-user">{item.phoneNumber}</td>
-                    <td className="colum-data-user">
-                      <button className="btn-edit me-2">
-                        <i className="far fa-edit item-edit"></i>
-                      </button>
+              {arrUsers &&
+                arrUsers.map((item, index) => {
+                  return (
+                    <tr key={index} className="lh-lg">
+                      <td className="column-data-user">{item.email}</td>
+                      <td className="column-data-user">{`${item.lastName} ${item.firstName}`}</td>
+                      <td className="column-data-user">{item.address}</td>
+                      <td className="column-data-user">{item.phoneNumber}</td>
+                      <td className="colum-data-user">
+                        <button  className="btn-edit me-2">
+                          <i className="far fa-edit item-edit"></i>
+                        </button>
 
-                      <button className="btn-del">
-                        <i className="far fa-trash-alt item-del"></i>
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
+                        <button onClick={() => this.handleDelUser(item)} className="btn-del">
+                          <i className="far fa-trash-alt item-del"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
             </tbody>
           </table>
         </div>
