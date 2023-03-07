@@ -10,7 +10,6 @@ class HomeHeader extends Component {
     this.props.changeLanguageApp(language)
   }
   render() {
-    console.log(this.props)
     let language = this.props.language
     return (
       <>

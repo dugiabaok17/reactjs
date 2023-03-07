@@ -20,10 +20,14 @@ const delUser = (userId) => {
     id: userId 
   }})
 }
+const getAllCodeService = (inputData) => {
+  return axios.get(`/all-codes?type=${inputData}`)
+}
 export {
   handleLoginApi,
   getAllUsers,
   createNewUser,
-  delUser
+  delUser,
+  getAllCodeService
 } 
 

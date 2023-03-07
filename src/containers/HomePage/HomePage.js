@@ -9,6 +9,7 @@ import MedicalFacility from './Section/MedicalFacility';
 import OutStandingDoctor from './Section/OutStandingDoctor';
 import HandBook from './Section/HandBook';
 import About from './Section/About';
+import FooterPage from './FooterPage';
 class HomePage extends Component {
 
     render() {
@@ -29,7 +30,7 @@ class HomePage extends Component {
                 <OutStandingDoctor settings = {settings}/>
                 <HandBook settings = {settings}/>
                 <About settings = {settings} />
-                <div style={{height:'300px'}}></div>
+                <FooterPage/>
             </div>
         )
     }
